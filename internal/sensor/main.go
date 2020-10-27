@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"math/rand"
 	"os"
 	"time"
 
@@ -28,19 +29,28 @@ func Start(c Config) {
 		panic(token.Error())
 	}
 
-	sensor, err := sds011.New(c.SensorPortPath)
+	// sensor, err := sds011.New(c.SensorPortPath)
 
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer sensor.Close()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// defer sensor.Close()
 
-	if err = sensor.SetCycle(c.CycleMinutes); err != nil {
-		log.Printf("ERROR: sensor.SetCycle: %v", err)
-	}
+	// if err = sensor.SetCycle(c.CycleMinutes); err != nil {
+	// 	log.Printf("ERROR: sensor.SetCycle: %v", err)
+	// }
 
 	for {
-		point, err := sensor.Get()
+		// point, err := sensor.Get()
+		var noError error
+
+		point, err := sds011.Point{
+			PM10:      float64(rand.Intn(20)),
+			PM25:      float64(rand.Intn(20)),
+			Timestamp: time.Now(),
+		}, noError
+		time.Sleep(5 * time.Second)
+
 		if err != nil {
 			log.Printf("ERROR: sensor.Get: %v", err)
 			continue
